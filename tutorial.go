@@ -1,49 +1,50 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
-type Student struct {
-	name   string
-	grades []int
-	age    int
+// if something has an area and returns a float64, it is type shape
+type shape interface {
+	area() float64
 }
 
-// a method on the Student struct
-// needs to be a pointer because we are modifying the student
-func (s *Student) setAge(age int) {
-	s.age = age
-	fmt.Println(age)
+type circle struct {
+	radius float64
 }
 
-// doesn't nedd to be a pointer because we aren't changing anything about the student
-func (s Student) getAverageGrade() float32 {
-	sum := 0
-	for _, grade := range s.grades {
-		sum += grade
-	}
-	return float32(sum) / float32(len(s.grades))
+type rect struct {
+	width  float64
+	height float64
 }
 
-func (s Student) getMaxGrade() int {
-	curMax := 0
-	for _, grade := range s.grades {
-		if grade > curMax {
-			curMax = grade
-		}
-	}
-	return curMax
+func (r *rect) area() float64 {
+	return r.width * r.height
+}
+
+func (c *circle) area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+
+func GetArea(s shape) float64 {
+	return s.area()
 }
 
 // entry point into our app. Will be called when we run our go program
 func main() {
-	s1 := Student{"Tim", []int{70, 90, 80, 85}, 19}
-	fmt.Println(s1.age)
-	s1.setAge(7)
+	c1 := circle{4.5}
+	r1 := rect{5, 7}
 
-	fmt.Println(s1.getAverageGrade())
-	fmt.Println(s1.getMaxGrade())
+	// when calling shapes, we can only use .area
+	shapes := []shape{&c1, &r1}
 
+	for _, shape := range shapes {
+		fmt.Println(GetArea(shape))
+	}
 }
 
 // variable - a way of storing and accessing information
 // function - a block of reusable code
+
+// interface - a way of looking at a set of related objects or types
